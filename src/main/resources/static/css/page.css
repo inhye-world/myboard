@@ -1,0 +1,12 @@
+a{
+    text-decoration: none;
+}
+
+.pagelist{
+    list-style: none;
+    text-align: center;
+}
+
+.pagelist li{
+    display: inline;
+}

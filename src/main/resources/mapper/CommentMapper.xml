@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.example.myboard.mapper.CommentMapper">
+
+    <select id="commentList" resultType="Comment">
+        select * from comment where bnum=#{bnum} order by cdate desc
+    </select>
+
+    <!--페이징 적용-->
+    <select id="commentPaging" resultType="Comment">
+        select cid, cnum, bnum, cname, cmt_content, cdate from comment where bnum=#{bnum} order by cdate desc limit #{start}, #{perBlock}
+    </select>
+
+    <select id="getTotal" resultType="int">
+        select count(*) from comment where bnum=#{bnum}
+    </select>
+    <!--페이징 적용 끝-->
+
+    <select id="getComment" resultType="Comment">
+        select * from comment where bnum=#{bnum}
+    </select>
+
+    <insert id="insertComment">
+        insert into comment(cid, bnum, cname, cmt_content, cdate, depth) values (#{cid}, #{bnum}, #{cname}, #{cmt_content}, #{cdate}, 1)
+    </insert>
+
+    <update id="modifyComment">
+        update comment set cmt_content=#{cmt_content} where cnum=#{cnum}
+    </update>
+
+    <delete id="deleteComment">
+        delete from comment where cnum=#{cnum}
+    </delete>
+</mapper>

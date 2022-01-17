@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
+      xmlns="http://www.w3.org/1999/html">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" th:href="@{https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap}">
+
+    <link rel="stylesheet" th:href="@{/fonts/icomoon/style.css}">
+
+    <link rel="stylesheet" th:href="@{/css/owl.carousel.min.css}">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    
+    <!-- Style -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/page.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/astyle.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/list.css}">
+
+    <title>게시판</title>
+  </head>
+  <body>
+  
+
+  <div class="content">
+    
+    <div class="container">
+      <h2>전체 글 보기</h2>
+      <div style="float: right"> 안녕하세요! &nbsp;
+        <strong><span class="mb-5" sec:authentication="principal.username"></span></strong>(<span class="mb-5" th:text="${username}"></span>)님
+        <span sec:authorize="isAuthenticated()"><a th:href="@{/logout}" style="font-size: 0.8em">로그아웃</a></span>
+      </div>
+      <div class="table-responsive">
+
+        <form action="" method="get">
+          <div>
+            <select id="keyword" name="keyword">
+              <option value="bname">작성자</option>
+              <option value="title">제목</option>
+              <option value="content">본문</option>
+            </select>
+            <input type="text" id="search" name="search">
+            <button type="submit">검색</button>
+            <div th:if="${search.search != null} and ${search.search != ''}" style="padding-top: 5px; float: right">
+              '<strong><span th:text="${search.search}"></span></strong>' 검색 결과 : 총 <strong><span th:text="${searchCnt}" style="color: #0055aa"></span></strong>건
+              <button><a th:href="@{/board/list}" style="text-decoration: none; font-size: 0.9em">전체 목록</a></button>
+            </div>
+          </div>
+        </form>
+
+        <table class="table custom-table">
+          <thead>
+            <tr>
+              
+              <th scope="col">번호</th>
+              <th scope="col">제목</th>
+              <th scope="col">작성자</th>
+              <th scope="col">조회수</th>
+              <th scope="col">게시일</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr scope="row" th:each="list : ${boardList.getList()}">
+
+              <td>
+                <span th:text="${list.getBnum()}"></span>
+              </td>
+              <td>
+                <a th:href="@{'/board/contentView-'+${list.getBnum()}}">
+                  <span th:text="${list.getTitle()}"></span>
+                </a>
+              </td>
+              <td>
+                <span th:text="${list.getBname()}"></span>
+              </td>
+              <td>
+                <span th:text="${list.getHit()}"></span>
+              </td>
+              <td>
+                <span th:text="${list.getDate()}"></span>
+              </td>
+
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <nav>
+        <ul class="pagelist" style="list-style: none; ">
+          <li th:classappend="${boardList.getPrePage() == 0} ? 'disabled'">
+            <a th:if="${search.getKeyword()}!=null and ${search.getSearch()}!=null" th:href="@{/board/list(pageNum=${boardList.getPrePage()},keyword=${search.getKeyword()}, search=${search.getSearch()})}">이전</a>
+            <a th:unless="${search.getKeyword()}!=null and ${search.getSearch()}!=null" th:href="@{/board/list(pageNum=${boardList.getPrePage()})}">이전</a>
+          </li>
+          <li th:each="page: ${#numbers.sequence(boardList.getNavigateFirstPage(), boardList.getNavigateLastPage())}" th:classappend="${page == boardList.getPageNum()} ? 'active'">
+            <a th:if="${search.getKeyword()}!=null and ${search.getSearch()}!=null" th:text="${page}" th:href="@{/board/list(pageNum=${page},keyword=${search.getKeyword()}, search=${search.getSearch()})}"></a>
+            <a th:unless="${search.getKeyword()}!=null and ${search.getSearch()}!=null" th:text="${page}" th:href="@{/board/list(pageNum=${page})}"></a>
+          </li>
+          <li th:classappend="${boardList.getNextPage() == 0} ? 'disabled'">
+            <a th:if="${search.getKeyword()}!=null and ${search.getSearch()}!=null" th:href="@{/board/list(pageNum=${boardList.getNextPage()},keyword=${search.getKeyword()}, search=${search.getSearch()})}">다음</a>
+            <a th:unless="${search.getKeyword()}!=null and ${search.getSearch()}!=null" th:href="@{/board/list(pageNum=${boardList.getNextPage()})}">다음</a>
+          </li>
+        </ul>
+      </nav>
+      <div class="goWrite" type="button"><a th:href="@{/board/writeView}">글작성</a></div>
+    </div>
+
+  </div>
+
+    <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+    <script th:src="@{/js/popper.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/mains.js}"></script>
+  </body>
+</html>

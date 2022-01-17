@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <script src="/ckeditor/ckeditor.js"></script>
+    <title>게시판</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/general.css}">
+    <link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/base/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="/plupload/js/jquery.ui.plupload/css/jquery.ui.plupload.css">
+    <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/plupload/js/plupload.full.min.js"></script>
+    <script type="text/javascript" src="/plupload/js/jquery.ui.plupload/jquery.ui.plupload.js"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/astyle.css}">
+</head>
+<body>
+    <div class="wrapper" style="padding-top: 3%">
+        <h1>글수정</h1>
+    <form id="modifyForm" th:action="@{/board/modify}" th:object="${board}" enctype="multipart/form-data" method="post">
+        <div>
+            <input type="hidden" th:field="*{bnum}"/>
+            <div class="writeTitle">
+                <label for="title">제목: </label><input type="text" th:field="*{title}" id="title" name="title" required="required" width = 50px th:placeholder="${temp.title}"/>
+            </div>
+        </div>
+        <label class="write">
+            <textarea id="modifyArea" th:field="*{content}" name="modifyArea" required="required" width = 50px></textarea>
+        </label>
+        <div id="uploader" style="margin-top: 10px"><input type="file" name="file"/></div>
+        <div class="buttons">
+            <button class="modifyBtn" type="submit">저장</button>
+        </div>
+    </form>
+    </div>
+    <script th:inline="javascript">
+        CKEDITOR.replace('modifyArea');
+        /*<![CDATA[*/
+        let contentValue = [[${temp.content}]];
+        CKEDITOR.instances.modifyArea.setData(contentValue);
+        /*]]>*/
+    </script>
+    <script type="text/javascript" th:inline="javascript" th:src="@{/js/bplupload.js}"></script>
+</body>
+</html>

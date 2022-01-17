@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="/ckeditor/ckeditor.js"></script>
+    <title>게시판</title>
+
+    <link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/base/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="/plupload/js/jquery.ui.plupload/css/jquery.ui.plupload.css">
+    <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/plupload/js/plupload.full.min.js"></script>
+    <script type="text/javascript" src="/plupload/js/jquery.ui.plupload/jquery.ui.plupload.js"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/astyle.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/general.css}">
+</head>
+<body>
+    <div class="wrapper" style="padding-top: 3%">
+        <h1>글작성</h1>
+    <form id="writeForm" th:action="@{/board/writeView}" th:object="${board}" enctype="multipart/form-data" onsubmit="plupload()" method="post">
+        <div class="writerName">
+            작성자: <span th:text="${userName}"></span>
+        </div>
+        <div class="writeTitle">
+        <label for="title">제목: </label><input type="text" th:field="*{title}" id="title" name="title" required="required" width = 50px placeholder="제목을 입력해주세요."/>
+        </div>
+        <label class="write">
+            <textarea id="content" th:field="*{content}" name="content" required="required" width = 50px></textarea>
+        </label>
+        <div id="uploader" style="margin-top: 10px"><input type="file" name="file"/></div>
+        <button class="writeBtn" type="submit">저장</button>
+    </form>
+    </div>
+    <script type="text/javascript">
+        CKEDITOR.config.allowedContent = true;
+        CKEDITOR.filebrowserUploadMethod = 'form';
+        CKEDITOR.replace('content', {
+            filebrowserUploadUrl : '/board/withImage'
+        });
+    </script>
+
+    <script type="text/javascript" th:inline="javascript" th:src="@{/js/bplupload.js}"></script>
+
+</body>
+</html>

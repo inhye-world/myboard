@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시판</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/astyle.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/general.css}">
+    <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        function commentList(bnum, pageNum){
+            let bno = [[${content.bnum}]];
+            $.ajax({
+                url: '/board/commentList',
+                type: 'get',
+                data : {
+                    'bnum': bno,
+                    'page': pageNum
+                },
+                success : function (data) {
+                    console.log("데이터 확인");
+                    console.log(data);
+
+                    let str = '';
+                    let page = data.page;
+                    let startPage = data.startPage;
+                    let endPage = data.endPage;
+                    let commentList = data.commentList;
+                    let isPrev = data.isPrev;
+                    let isNext = data.isNext;
+                    let total = data.total;
+
+                    $.each(commentList, function(index, item){
+                        str += '<div class="commentArea">';
+                        str += '<div class="commentInfo'+item.cnum+'" style="padding-bottom: 5px"><strong>'+ item.cname+'</strong>'+'('+item.cdate+')';
+                        str += '<div class="commentContent'+item.cnum+'" style="padding-left: 10px; display: inline;"> <p class="paragraphArea"> '+item.cmt_content +'</p>';
+                        if([[${accessId}]] === item.cid){
+                            str += '<a style="cursor: pointer; color: #aa5500" onclick="commentUpdate('+item.cnum+',\''+item.cmt_content+'\');"> 수정 </a>';
+                            str += '<a style="cursor: pointer" onclick="commentDelete('+item.cnum+');"> 삭제 </a> </div>';
+                        }
+                        str += '</div></div>';
+                    });
+                    if(total !== 0) {
+                        str += '<nav class="pagenation">';
+                        str += '<ul style="list-style:none; display: flex;">';
+
+                        if (isPrev !== 0) {
+                            str += '<li><a class="goPrev" href="#" onclick="commentPaging(' + data.bnum + ',' + isPrev + '); return false;"> 이전 </a></li>';
+                        }
+
+                        for (let num = startPage; num <= endPage; num++) {
+                            if (num === page) {
+                                str += '<li><a href="#" onclick="commentPaging(' + data.bnum + ',' + num + '); return false;">' + num + '</a></li>';
+                            } else {
+                                str += '<li><a href="#" onclick="commentPaging(' + data.bnum + ',' + num + '); return false;">' + num + '</a></li>';
+                            }
+                        }
+
+                        if (isNext !== 0 && endPage !== 1) {
+                            str += '<li><a class="goNext" href="#" onclick="commentPaging(' + data.bnum + ',' + isNext + '); return false;"> 다음 </a></li>';
+                        }
+
+                        str += '</ul>';
+                        str += '</nav>';
+                        $("#replyList").html(str);
+                    }else{
+                        str += '<div class="noReplyNotion">댓글이 없습니다.</div>';
+                        $("#replyList").html(str);
+                    }
+                }
+        });
+        }
+        /*]]>*/
+    </script>
+</head>
+<body>
+    <div class="wrapper">
+        <div>
+            <div class="postTitle">
+                <h2 th:text="${content.title}">제목</h2>
+            </div>
+            <div class="content">
+                <ul style="list-style: none">
+                    <ul class="contentProp">
+                        <li>작성자: <span th:text="${content.bname}"></span></li>
+                        <li>게시일: <span th:text="${content.date}"></span></li>
+                    </ul>
+                    <div class="contentArea" style="overflow: auto">
+                        <p th:utext="${content.content}" id="textArea"></p>
+                    </div>
+                    <div th:if="${content.file_save_name != null}" class="attfile">
+                        <strong>첨부파일 : </strong>
+                        <a th:href="@{'/download/'+${content.bnum}}" th:text="${content.file_name}"></a>
+                    </div>
+                </ul>
+            </div>
+
+            <div class="buttons">
+                <div style="padding-right: 7px" th:if="${accessId == content.bid}">
+                    <button id="modifyBtn"><a th:href="@{'/board/modify-'+${content.bnum}}">수정</a></button>
+                    <input type="button" id="checkDel" value="삭제" th:onclick="'checkDelete('+${content.bnum}+');'"/>
+                </div>
+                <button><a th:href="@{/board/list}" style="text-decoration: none">목록으로</a></button>
+            </div>
+
+            <div id="replyArea">
+                <div id="writeReply">
+                    <textarea id="replytext" name="replytext" placeholder="댓글을 작성하세요"></textarea>
+                    <input id="insertReply" type="button" value="게시"/>
+                </div>
+                <div id="replyList">
+                    <script type="text/javascript" th:inline="javascript">
+                        /*<![CDATA[*/
+                        let bno = [[${content.bnum}]];
+                        commentList(bno, 1);
+                        /*]]>*/
+                    </script>
+                    <!--<script type="text/javascript" th:inline="javascript">
+                        /*<![CDATA[*/
+                        $(function(){
+                            let pageBtn = $("#pageColor > ul > li");
+                            pageBtn.find("a").click(function(){
+                                alert("-&#45;&#45;&#45;&#45;&#45;&#45;");
+                                pageBtn .removeClass("active");
+                                $(this).parent().addClass("active");
+                            })
+                        });
+                        /*]]>*/
+                    </script>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:src="@{/js/deletePopup.js}"></script>
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        $("#insertReply").click(function(){
+            let bno = [[${content.bnum}]];
+            let replytext =$("#replytext").val();
+
+            $.ajax({
+                type: 'POST',
+                url: "/board/insertReply",
+                data:{
+                    cmt_content:replytext,
+                    bnum:bno,
+                },
+                success: function() {
+                    commentList(bno, 1);
+                },
+                error: function(status){
+                    console.log("에러: " + status);
+                }
+            })
+        })
+
+        //입력 창 끼워넣기
+        function commentUpdate(cnum, cmt_content){
+            var str ='';
+
+            str += '<div class="makeInputBox" style="display: inline">';
+            str += '<input type="text" name="cmt_content" value="'+cmt_content+'" style="border: 1px solid #ddd"/>';
+            str += '<span><button class="goModify" type="button" onclick="commentUpdateProc('+cnum+');" style="border: none">수정</button> </span>';
+            str += '</div>';
+
+            $('.commentContent'+cnum).html(str);
+        }
+
+        //댓글 수정
+        function commentUpdateProc(cnum){
+            let updateContent = $('[name=cmt_content]').val();
+
+            $.ajax({
+                url : '/board/commentUpdate',
+                type : 'POST',
+                data : {
+                    cmt_content : updateContent,
+                    cnum : cnum
+                },
+                success : function(status){
+                    console.log("수정 성공!: "+status);
+                    commentList(bno, 1);
+                },
+                error:function(status){
+                    console.log("수정 결과: "+status);
+                }
+            });
+        }
+
+        function commentDelete(cnum){
+            if(confirm("정말 댓글을 삭제하시겠습니까?") === true){
+                $.ajax({
+                    url : '/board/commentDelete',
+                    type : 'GET',
+                    data : {cnum : cnum},
+                    success : function(status){
+                        console.log("삭제 성공!: "+status);
+                        commentList(bno, 1);
+                    },
+                    error:function(status){
+                        console.log("삭제 결과: "+status);
+                    }
+                });
+            }
+        }
+
+        function commentPaging(bnum, pageNum){
+            let bno = [[${content.bnum}]];
+            $.ajax({
+                url:'/board/commentList',
+                type: 'GET',
+                data:
+                    {
+                        'bnum':bno,
+                        'page':pageNum
+                    },
+                success: function(data) {
+                    let str = '';
+                    let page = data.page;
+                    let startPage = data.startPage;
+                    let endPage = data.endPage;
+                    let commentList = data.commentList;
+                    let isPrev = data.isPrev;
+                    let isNext = data.isNext;
+
+                    $.each(commentList, function(index, item){
+                        str += '<div class="commentArea">';
+                        str += '<div class="commentInfo'+item.cnum+'" style="padding-bottom: 5px"><strong>'+ item.cname+'</strong>'+'('+item.cdate+')';
+                        str += '<div class="commentContent'+item.cnum+'" style="padding-left: 10px; display: inline;"> <p class="paragraphArea"> '+item.cmt_content +'</p>';
+                        if([[${accessId}]] === item.cid){
+                            str += '<a style="cursor: pointer; color: #aa5500" onclick="commentUpdate('+item.cnum+',\''+item.cmt_content+'\');"> 수정 </a>';
+                            str += '<a style="cursor: pointer" onclick="commentDelete('+item.cnum+');"> 삭제 </a> </div>';
+                        }
+                        str += '</div></div>';
+                    });
+
+                    str += '<nav class="pagenation">';
+                    str += '<ul style="list-style:none; display: flex;">';
+
+                    if(isPrev!==0){
+                        str += '<li><a class="goPrev" href="#" onclick="commentPaging('+ data.bnum +',' + isPrev + '); return false;"> 이전 </a></li>';
+                    }
+
+                    for (let num = startPage; num <= endPage; num++) {
+                        if (num === page) {
+                            str += '<li><a href="#" onclick="commentPaging(' + data.bnum + ',' + num + '); return false;" class="page-btn">' + num + '</a></li>';
+                        } else {
+                            str += '<li><a href="#" onclick="commentPaging(' + data.bnum + ',' + num + '); return false;" class="page-btn">' + num + '</a></li>';
+                        }
+                    }
+
+                    if(isNext!==0){
+                        str += '<li><a class="goNext" href="#" onclick="commentPaging('+ data.bnum +',' + isNext + '); return false;"> 다음 </a></li>';
+                    }
+
+                    str += '</ul>';
+                    str += '</nav>';
+
+                    $("#replyList").html(str);
+                }
+            })
+        }
+        /*]]>*/
+    </script>
+</body>
+</html>

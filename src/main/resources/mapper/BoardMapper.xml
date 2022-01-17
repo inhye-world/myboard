@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.example.myboard.mapper.BoardMapper">
+
+    <select id="pagingList" resultType="BoardEntity">
+        select bnum, title, content, bname, bid, hit, date from board
+        where 1=1
+        <if test="keyword == 'title'">
+            AND title like concat('%',#{search},'%')
+        </if>
+        <if test="keyword == 'bname'">
+            AND bname like concat('%',#{search},'%')
+        </if>
+        <if test="keyword == 'content'">
+            AND content like concat('%',#{search},'%')
+        </if>
+        order by date desc
+    </select>
+
+    <!--검색 결과 수-->
+    <select id="searchCnt" resultType="int">
+        select count(*) from(
+            select bnum, title, content, bname, bid, hit, date from board
+            where 1=1
+            <if test="keyword == 'title'">AND title like concat('%',#{search},'%')</if>
+            <if test="keyword == 'bname'">AND bname like concat('%',#{search},'%')</if>
+            <if test="keyword == 'content'">AND content like concat('%',#{search},'%')</if>
+        ) c;
+    </select>
+    <!---->
+
+    <select id="getContent" resultType="Board">
+        select bnum, title, content, bname, bid, date, file_name, file_save_name, file_download_uri from board where bnum=#{bnum}
+    </select>
+
+    <select id="insertPost">
+        insert into board(title, content, bname, bid, hit, date, file_name, file_save_name, file_size, file_download_uri) values (#{title}, #{content}, #{bname}, #{bid}, 0, #{date}, #{file_name}, #{file_save_name}, #{file_size}, #{file_download_uri})
+    </select>
+
+    <delete id="delete">
+        delete from board where bnum=#{bnum}
+    </delete>
+
+    <update id="modify">
+        update board set title=#{title}, content=#{content}, file_name=#{file_name}, file_save_name=#{file_save_name}, file_size=#{file_size}, file_download_uri=#{file_download_uri} where bnum=#{bnum}
+    </update>
+
+    <update id="updateHit">
+        update board set hit=hit+1 where bnum=#{bnum}
+    </update>
+
+</mapper>

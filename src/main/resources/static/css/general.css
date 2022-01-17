@@ -1,0 +1,99 @@
+.wrapper{
+    width: 1040px;
+    height: 800px;
+    position:relative;
+    margin: 0 auto;
+}
+
+.writerName, .writeTitle{
+    padding-bottom: 20px;
+}
+
+.postTitle{
+    padding-top: 30px;
+    padding-left: 40px;
+}
+
+.contentArea{
+    margin-top: 30px;
+    width: 940px;
+    height: 550px;
+    border:1px solid #ddd;
+}
+
+.contentProp{
+    list-style: none;
+}
+
+.attfile{
+    padding-top: 5px;
+}
+
+.buttons{
+    float: right;
+    display: flex;
+    padding-right: 55px;
+}
+
+#replyArea{
+    padding-left: 40px;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    clear: both;
+}
+
+#writeReply{
+    width: 940px;
+    display: flex;
+}
+
+#replytext{
+    width: 900px;
+    border: 1px solid #ddd;
+}
+
+#replyList{
+    font-size: 0.8em;
+    padding-top: 15px;
+}
+
+.writeBtn{
+    float: right;
+}
+
+#textArea{
+    padding-left: 15px;
+}
+
+.paragraphArea{
+   display: inline;
+}
+
+.commentContent{
+    display: inline;
+}
+
+.pagenation{
+    font-size: 1.2em;
+    padding-bottom: 10px;
+}
+
+.pagenation ul{
+    text-align: center;
+    float: left;
+    padding-left: 45%;
+}
+
+.pagenation ul li{
+    padding-right: 8px;
+}
+
+.noReplyNotion{
+    padding-top: 30px;
+    padding-left: 45%;
+    color: #005cbf;
+}
+
+#pageColor .active .page-btn{
+    color: #57b846 !important;
+}

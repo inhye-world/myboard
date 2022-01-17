@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.example.myboard.mapper.MemberMapper">
+
+    <insert id="singup">
+        insert into member (id, name, pwd, authority) values (#{id}, #{name}, #{pwd}, 'ROLE_USER')
+    </insert>
+
+    <select id="chkPwd" resultType="String">
+        select pwd from member where id = #{id}
+    </select>
+
+    <select id="getUserInfo" resultType="Member">
+        select * from member where id = #{id}
+    </select>
+
+    <select id="findByUsername" resultType="Member">
+        select * from member where id = #{id}
+    </select>
+
+    <select id="selectUserAuth" resultType="hashmap">
+        select authority from member where id = #{id}
+    </select>
+
+    <select id="getUserName" resultType="String">
+        select name from member where id = #{id}
+    </select>
+
+    <select id="getSameUserId" resultType="Member">
+        select * from member where id = #{id}
+    </select>
+</mapper>
