@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>my gallery</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main_prac.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav id="header">
+        <div class="navbar__logo">
+            <a href="/" class="brandlogo">
+                <img th:src="@{/images/avocadologo.png}">
+            </a>
+        </div>
+
+        <ul class="navbar__menu">
+            <li class="navbar__menu_item">share!</li>
+            <li class="navbar__menu_item">drawing shop</li>
+            <li class="navbar__menu_item">drawing youtuber</li>
+            <li class="navbar__menu_item"><a href="/board/list">my page</a></li>
+            <li class="navbar__menu_item"><a href="/login">login</a></li>
+        </ul>
+    </nav>
+    <section id="information">
+        <h1 class="descript">
+            나의 화실에서 그림을 올리고 공유해요!
+        </h1>
+    </section>
+    <section id="all_art" class="section">
+        <div class="alldraws">
+            <img th:src="@{/images/draws/art1.jpg}">
+            <img th:src="@{/images/draws/art2.jpg}">
+        </div>
+    </section>
+    <footer id="footer">
+    </footer>
+</body>
+</html>

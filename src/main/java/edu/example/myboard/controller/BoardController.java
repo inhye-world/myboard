@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -37,6 +38,11 @@ public class BoardController {
 
     @Autowired
     CommentService commentService;
+
+    @GetMapping("/")
+    public String main(){
+        return "board/main";
+    }
 
     @GetMapping("/board/list")
     public String page(@RequestParam(required = false, defaultValue = "1") int pageNum,
