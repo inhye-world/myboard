@@ -46,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .csrf().disable()
                 .authorizeRequests()
-                    .antMatchers("/login","/member/join","/login/failLogin")
+                    .antMatchers("/","/member/join","//failLogin")
                     .permitAll()
                     .antMatchers("/board/**")
                     .authenticated()
@@ -54,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .formLogin()
                     .loginPage("/login")
                     .failureHandler(authFailureHandler)
-                    .defaultSuccessUrl("/board/list")
+                    .defaultSuccessUrl("/")
                     .usernameParameter("id")
                     .passwordParameter("pwd");
 

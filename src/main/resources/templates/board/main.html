@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>my gallery</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/main_prac.css}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
@@ -17,11 +18,11 @@
         </div>
 
         <ul class="navbar__menu">
-            <li class="navbar__menu_item">share!</li>
             <li class="navbar__menu_item">drawing shop</li>
             <li class="navbar__menu_item">drawing youtuber</li>
             <li class="navbar__menu_item"><a href="/board/list">my page</a></li>
-            <li class="navbar__menu_item"><a href="/login">login</a></li>
+            <li class="navbar__menu_item" sec:authorize="isAnonymous()"><a th:href="@{/login}">login</a></li>
+            <li class="navbar__menu_item" sec:authorize="isAuthenticated()"><a th:href="@{/logout}">logout</a></li>
         </ul>
     </nav>
     <section id="information">
@@ -36,6 +37,8 @@
         </div>
     </section>
     <footer id="footer">
+        <i class="far fa-copyright"></i>
+        <span>Copyright Inhye Ryu</span>
     </footer>
 </body>
 </html>
