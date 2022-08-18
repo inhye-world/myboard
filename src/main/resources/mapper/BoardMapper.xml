@@ -38,6 +38,10 @@
         insert into board(title, content, bname, bid, hit, date, file_name, file_save_name, file_size, file_download_uri) values (#{title}, #{content}, #{bname}, #{bid}, 0, #{date}, #{file_name}, #{file_save_name}, #{file_size}, #{file_download_uri})
     </select>
 
+    <select id="insertExcelData" parameterType="java.util.Map">
+        insert into board(title, content, bname, bid, date) values (#{title}, #{content}, #{bname}, #{bid}, #{date})
+    </select>
+
     <delete id="delete">
         delete from board where bnum=#{bnum}
     </delete>

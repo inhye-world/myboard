@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @Mapper
@@ -26,5 +27,7 @@ public interface BoardMapper {
     void modify(Board board);
 
     void updateHit(int bnum);
+
+    void insertExcelData(Map<String, Object> map);
 }
 

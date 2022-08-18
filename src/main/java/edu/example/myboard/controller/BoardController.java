@@ -110,14 +110,19 @@ public class BoardController {
             String fileName = file.getOriginalFilename();
             File destinationFile;
             String destinationFileName;
+            String path = "";
 
             do{
                 destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." +fileName;
-                destinationFile = new File(uploadFileDir + destinationFileName);
+                path = uploadFileDir + destinationFileName;
+
+                destinationFile = new File(path);
             }while(destinationFile.exists());
 
 
             file.transferTo(destinationFile);
+
+            boardService.insertExcelData(path);
 
             board.setFile_name(fileName);
             board.setFile_save_name(destinationFileName);

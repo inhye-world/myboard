@@ -6,14 +6,21 @@ import edu.example.myboard.dto.Board;
 import edu.example.myboard.dto.BoardEntity;
 import edu.example.myboard.dto.Search;
 import edu.example.myboard.mapper.BoardMapper;
+import edu.example.myboard.utils.ExcelUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -53,4 +60,32 @@ public class BoardService {
     public void modify(Board board) {
         boardMapper.modify(board);
     }
+
+
+    public List<Board> insertExcelData(String excelFile) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        List<Board> list = null;
+
+        try{
+            Workbook wbs = ExcelUtil.getWorkbook(excelFile);
+            Sheet sheet = (Sheet)wbs.getSheetAt(0);
+
+            for(int i = sheet.getFirstRowNum() + 1; i <= sheet.getLastRowNum(); i++){
+                Row row = sheet.getRow(i);
+
+                map.put("title", ExcelUtil.cellValue(row.getCell(0)));
+                map.put("content", ExcelUtil.cellValue(row.getCell(1)));
+                map.put("bname", ExcelUtil.cellValue(row.getCell(2)));
+                map.put("bid", ExcelUtil.cellValue(row.getCell(3)));
+                map.put("date", ExcelUtil.cellValue(row.getCell(4)));
+
+                boardMapper.insertExcelData(map);
+            }
+        }catch (Exception e){
+            log.error("error : {}", e.getMessage());
+        }
+
+        return list;
+    }
+
 }
